@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   experimental: {
     mdxRs: true,
+    turbopackUseSystemTlsCerts: true,
   },
 };
 

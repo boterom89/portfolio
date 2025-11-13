@@ -27,6 +27,7 @@ This portfolio showcases my work as a Product Designer, featuring detailed case 
 - 🔍 SEO-optimized for design leadership keywords
 - ♿️ WCAG 2.1 AA accessible
 - 📱 Mobile-first responsive design
+- 🔒 Password protection for selective case study access
 - 🤖 AI agents for content optimization
 
 ---
@@ -42,6 +43,9 @@ npm run dev
 
 # Open browser
 # Visit http://localhost:3000
+
+# Generate password hash (for password protection)
+npm run hash-password "yourpassword"
 
 # Build for production
 npm run build
@@ -87,11 +91,12 @@ portfolio/
 │   │   ├── Header.tsx
 │   │   ├── Footer.tsx
 │   │   └── Navigation.tsx
-│   └── home/
-│       ├── Hero.tsx
-│       ├── FeaturedWork.tsx
-│       ├── About.tsx
-│       └── Contact.tsx
+│   ├── home/
+│   │   ├── Hero.tsx
+│   │   ├── FeaturedWork.tsx
+│   │   ├── About.tsx
+│   │   └── Contact.tsx
+│   └── ServerPasswordPrompt.tsx   # Password protection UI
 │
 ├── content/
 │   ├── case-studies/              # MDX case studies
@@ -113,8 +118,21 @@ portfolio/
 │
 ├── lib/
 │   ├── contentlayer.ts            # Content utilities
-│   └── seo.ts                     # SEO utilities
+│   ├── seo.ts                     # SEO utilities
+│   ├── serverPasswordAuth.ts      # Server-side password validation
+│   └── mdx.ts                     # MDX utilities
 │
+├── actions/
+│   └── authActions.ts             # Server actions for authentication
+│
+├── scripts/
+│   └── hashPassword.js            # Password hashing utility
+│
+├── docs/
+│   └── PASSWORD_PROTECTION.md     # Password protection guide
+│
+├── .env.example                   # Environment variable examples
+├── README_PASSWORD_PROTECTION.md  # Quick password setup reference
 ├── contentlayer.config.ts         # Contentlayer configuration
 ├── tailwind.config.ts             # Tailwind configuration
 └── next.config.js                 # Next.js configuration
@@ -255,6 +273,31 @@ seo:
 
 ---
 
+## 🔒 Password Protection
+
+Secure password protection for case studies with server-side validation, SHA-256 hashing, and HTTP-only cookies. All case studies are publicly accessible by default unless explicitly locked.
+
+**Key Features:**
+- Server-side validation (passwords never exposed to client)
+- 7-day authentication with XSS/CSRF protection
+- Global or per-case-study passwords
+- Works with static generation
+
+**Quick Setup:**
+```bash
+npm run hash-password "yourpassword"
+# Add hash to .env.local, set locked: true in frontmatter
+```
+
+**Documentation:**
+- **Quick Reference:** [README_PASSWORD_PROTECTION.md](README_PASSWORD_PROTECTION.md) - 3-step setup guide
+- **Full Guide:** [docs/PASSWORD_PROTECTION.md](docs/PASSWORD_PROTECTION.md) - Complete documentation with examples, troubleshooting, and deployment
+
+**Use for:** Client portfolios, WIP case studies, professional courtesy
+**Not for:** HIPAA/PCI compliance, enterprise security, audit requirements
+
+---
+
 ## 🎯 SEO Strategy
 
 ### Target Keywords
@@ -332,6 +375,12 @@ vercel --prod
 # .env.local
 NEXT_PUBLIC_SITE_URL=https://nicolasbotero.com
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# Password Protection (optional)
+CASE_STUDY_GLOBAL_PASSWORD=your-password-hash-here
+# Or per-case-study:
+# CASE_STUDY_OCEAN_PASSWORD=hash-here
+# CASE_STUDY_SAINAPSIS_PASSWORD=hash-here
 ```
 
 ### Custom Domain Setup
